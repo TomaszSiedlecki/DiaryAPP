@@ -1,0 +1,55 @@
+body{
+  color:black !important;
+}
+table{
+  background-color: white;
+}
+.login-container{
+  background-color: #ffffff;
+  border: 1px solid white;
+  border-radius: 1.24rem;
+  top:40%;
+  position:fixed;
+  width: 50%;
+  right: 26%;
+}
+.bg-white{
+  background-color: #ffffff  !important;
+}
+.text-diary{
+  color:#aa5bf9 !important;
+}
+.diary-button{
+  background-color: #aa5bf9 !important;
+  border: 0 !important;
+  border-radius: 50px !important;
+  color: #fff !important;
+  text-decoration: none;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.filter-holder{
+  background-color: white;
+  width: 100%;
+  margin:1rem;
+  min-height: 3rem;
+}
+
+.filter-select{
+  display: inline-block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: .375rem 1.75rem .375rem .75rem;
+  line-height: 1.5;
+  color: #495057;
+  vertical-align: middle;
+  background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+  background-size: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

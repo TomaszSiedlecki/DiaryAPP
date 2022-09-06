@@ -1,0 +1,419 @@
+const url = "http://localhost:2653";
+
+export interface Int64StringKeyValuePair {
+    /** @format int64 */
+    key?: number;
+    value?: string | null;
+  }
+  
+  export interface StudentGradesResponse {
+    isSuccessfull?: boolean;
+    studentGrades?: Int64StringKeyValuePair[] | null;
+  }
+  
+  export interface BaseResponse {
+    isSuccessfull?: boolean;
+  }
+  
+  export interface UserRequest {
+    firstName?: string | null;
+    secondName?: string | null;
+    className?: string | null;
+  }
+  
+  export interface UserResponse {
+    isSuccessfull?: boolean;
+    firstName?: string | null;
+    secondName?: string | null;
+  
+    /** @format date-time */
+    bornDate?: string;
+    address?: string | null;
+    className?: string | null;
+    role?: string | null;
+  }
+  
+  export interface AddUserRequest {
+    firstName?: string | null;
+    secondName?: string | null;
+  
+    /** @format date-time */
+    bornDate?: string;
+    accountName?: string | null;
+    password?: string | null;
+    email?: string | null;
+    address?: string | null;
+  
+    /** @format int64 */
+    classID?: number | null;
+  
+    /** @format int64 */
+    roleID?: number | null;
+  }
+  
+  export interface AddUserResponse {
+    isSuccessfull?: boolean;
+  }
+  
+  export interface ValidateUserRequest {
+    userName?: string | null;
+    password?: string | null;
+  }
+  
+  export interface ValidateUserResponse {
+    isSuccessfull?: boolean;
+    isValid?: boolean;
+    token?: string | null;
+    username: string;
+    surname: string;
+    classID: number;
+    studentID: number;
+  }
+  
+  export type QueryParamsType = Record<string | number, any>;
+  export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
+  
+  export interface FullRequestParams extends Omit<RequestInit, "body"> {
+    /** set parameter to `true` for call `securityWorker` for this request */
+    secure?: boolean;
+    /** request path */
+    path: string;
+    /** content type of request body */
+    type?: ContentType;
+    /** query params */
+    query?: QueryParamsType;
+    /** format of response (i.e. response.json() -> format: "json") */
+    format?: ResponseFormat;
+    /** request body */
+    body?: unknown;
+    /** base url */
+    baseUrl?: string;
+    /** request cancellation token */
+    cancelToken?: CancelToken;
+  }
+  
+  export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
+  
+  export interface ApiConfig<SecurityDataType = unknown> {
+    baseUrl?: string;
+    baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
+    securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
+    customFetch?: typeof fetch;
+  }
+  
+  export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
+    data: D;
+    error: E;
+  }
+  
+  type CancelToken = Symbol | string | number;
+  
+  export enum ContentType {
+    Json = "application/json",
+    FormData = "multipart/form-data",
+    UrlEncoded = "application/x-www-form-urlencoded",
+  }
+  
+  export class HttpClient<SecurityDataType = unknown> {
+    public baseUrl: string = "";
+    private securityData: SecurityDataType | null = null;
+    private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
+    private abortControllers = new Map<CancelToken, AbortController>();
+    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
+  
+    private baseApiParams: RequestParams = {
+      credentials: "same-origin",
+      headers: {
+        'Access-Control-Allow-Origin': "*",
+        
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+    };
+  
+    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+      Object.assign(this, apiConfig);
+    }
+  
+    public setSecurityData = (data: SecurityDataType | null) => {
+      this.securityData = data;
+    };
+  
+    private encodeQueryParam(key: string, value: any) {
+      const encodedKey = encodeURIComponent(key);
+      return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+  
+    private addQueryParam(query: QueryParamsType, key: string) {
+      return this.encodeQueryParam(key, query[key]);
+    }
+  
+    private addArrayQueryParam(query: QueryParamsType, key: string) {
+      const value = query[key];
+      return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+    }
+  
+    protected toQueryString(rawQuery?: QueryParamsType): string {
+      const query = rawQuery || {};
+      const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+      return keys
+        .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+        .join("&");
+    }
+  
+    protected addQueryParams(rawQuery?: QueryParamsType): string {
+      const queryString = this.toQueryString(rawQuery);
+      return queryString ? `?${queryString}` : "";
+    }
+  
+    private contentFormatters: Record<ContentType, (input: any) => any> = {
+      [ContentType.Json]: (input: any) =>
+        input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+      [ContentType.FormData]: (input: any) =>
+        Object.keys(input || {}).reduce((formData, key) => {
+          const property = input[key];
+          formData.append(
+            key,
+            property instanceof Blob
+              ? property
+              : typeof property === "object" && property !== null
+              ? JSON.stringify(property)
+              : `${property}`,
+          );
+          return formData;
+        }, new FormData()),
+      [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
+    };
+  
+    private mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+      return {
+        ...this.baseApiParams,
+        ...params1,
+        ...(params2 || {}),
+        headers: {
+          ...(this.baseApiParams.headers || {}),
+          ...(params1.headers || {}),
+          ...((params2 && params2.headers) || {}),
+        },
+      };
+    }
+  
+    private createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+      if (this.abortControllers.has(cancelToken)) {
+        const abortController = this.abortControllers.get(cancelToken);
+        if (abortController) {
+          return abortController.signal;
+        }
+        return void 0;
+      }
+  
+      const abortController = new AbortController();
+      this.abortControllers.set(cancelToken, abortController);
+      return abortController.signal;
+    };
+  
+    public abortRequest = (cancelToken: CancelToken) => {
+      const abortController = this.abortControllers.get(cancelToken);
+  
+      if (abortController) {
+        abortController.abort();
+        this.abortControllers.delete(cancelToken);
+      }
+    };
+  
+    public request = async <T = any, E = any>({
+      body,
+      secure,
+      path,
+      type,
+      query,
+      format,
+      baseUrl,
+      cancelToken,
+      ...params
+    }: FullRequestParams): Promise<HttpResponse<T, E>> => {
+      const secureParams =
+        ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
+          this.securityWorker &&
+          (await this.securityWorker(this.securityData))) ||
+        {};
+      const requestParams = this.mergeRequestParams(params, secureParams);
+      const queryString = query && this.toQueryString(query);
+      const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+      const responseFormat = format || requestParams.format;
+  
+      return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
+        ...requestParams,
+        headers: {
+          ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+          ...(requestParams.headers || {}),
+        },
+        signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,
+        body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+      }).then(async (response) => {
+        const r = response as HttpResponse<T, E>;
+        r.data = null as unknown as T;
+        r.error = null as unknown as E;
+  
+        const data = !responseFormat
+          ? r
+          : await response[responseFormat]()
+              .then((data) => {
+                if (r.ok) {
+                  r.data = data;
+                } else {
+                  r.error = data;
+                }
+                return r;
+              })
+              .catch((e) => {
+                r.error = e;
+                return r;
+              });
+  
+        if (cancelToken) {
+          this.abortControllers.delete(cancelToken);
+        }
+  
+        if (!response.ok) throw data;
+        return data;
+      });
+    };
+  }
+  
+  /**
+   * @title praca_magisterska_API
+   * @version v1
+   */
+  export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+    getStudentGradesForSubject = {
+      /**
+       * No description
+       *
+       * @tags Grade
+       * @name GetStudentGradesForSubjectCreate
+       * @request POST:/GetStudentGradesForSubject
+       */
+      getStudentGradesForSubjectCreate: (
+        query?: { SubjectID?: number; StudentID?: number },
+        params: RequestParams = {},
+      ) =>
+        this.request<StudentGradesResponse, any>({
+          path: url + `/GetStudentGradesForSubject`,
+          method: "POST",
+          query: query,
+          format: "json",
+          ...params,
+        }),
+    };
+    getStudentAllGrades = {
+      /**
+       * No description
+       *
+       * @tags Grade
+       * @name GetStudentAllGradesCreate
+       * @request POST:/GetStudentAllGrades
+       */
+      getStudentAllGradesCreate: (query?: { StudentID?: number }, params: RequestParams = {}) =>
+        this.request<StudentGradesResponse, any>({
+          path: url + `/GetStudentAllGrades`,
+          method: "POST",
+          query: query,
+          format: "json",
+          ...params,
+        }),
+    };
+    addGrade = {
+      /**
+       * No description
+       *
+       * @tags Grade
+       * @name AddGradeCreate
+       * @request POST:/AddGrade
+       */
+      addGradeCreate: (
+        query?: { StudentID?: number; TeacherID?: number; Grade?: string | null; SubjectID?: number },
+        params: RequestParams = {},
+      ) =>
+        this.request<BaseResponse, any>({
+          path: url + `/AddGrade`,
+          method: "POST",
+          query: query,
+          format: "json",
+          ...params,
+        }),
+    };
+    deleteGrade = {
+      /**
+       * No description
+       *
+       * @tags Grade
+       * @name DeleteGradeCreate
+       * @request POST:/DeleteGrade
+       */
+      deleteGradeCreate: (
+        query?: { StudentID?: number; TeacherID?: number; Grade?: string | null; SubjectID?: number },
+        params: RequestParams = {},
+      ) =>
+        this.request<BaseResponse, any>({
+          path: url + `/DeleteGrade`,
+          method: "POST",
+          query: query,
+          format: "json",
+          ...params,
+        }),
+    };
+    api = {
+      /**
+       * No description
+       *
+       * @tags User
+       * @name UserGetUserCreate
+       * @request POST:/api/User/GetUser
+       */
+      userGetUserCreate: (data: UserRequest, params: RequestParams = {}) =>
+        this.request<UserResponse, any>({
+          path: url + `/api/User/GetUser`,
+          method: "POST",
+          body: data,
+          type: ContentType.Json,
+          format: "json",
+          ...params,
+        }),
+  
+      /**
+       * No description
+       *
+       * @tags User
+       * @name UserAddUserCreate
+       * @request POST:/api/User/AddUser
+       */
+      userAddUserCreate: (data: AddUserRequest, params: RequestParams = {}) =>
+        this.request<AddUserResponse, any>({
+          path: url + `/api/User/AddUser`,
+          method: "POST",
+          body: data,
+          type: ContentType.Json,
+          format: "json",
+          ...params,
+        }),
+  
+      /**
+       * No description
+       *
+       * @tags User
+       * @name UserValidateUserCreate
+       * @request POST:/api/User/ValidateUser
+       */
+      userValidateUserCreate: (data: ValidateUserRequest, params: RequestParams = {}) =>
+        this.request<ValidateUserResponse, any>({
+          path: url + `/api/User/ValidateUser`,
+          method: "POST",
+          body: data,
+          type: ContentType.Json,
+          format: "json",
+          ...params,
+        }),
+    };
+  }
+  
