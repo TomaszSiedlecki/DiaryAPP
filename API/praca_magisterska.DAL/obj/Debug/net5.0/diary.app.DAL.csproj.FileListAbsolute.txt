@@ -1,0 +1,15 @@
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\diary.app.DAL.deps.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\diary.app.DAL.runtimeconfig.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\diary.app.DAL.runtimeconfig.dev.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\diary.app.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\ref\diary.app.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\diary.app.DAL.pdb
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.csprojAssemblyReference.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.AssemblyInfoInputs.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.AssemblyInfo.cs
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\ref\diary.app.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.pdb
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\diary.app.DAL.genruntimeconfig.cache

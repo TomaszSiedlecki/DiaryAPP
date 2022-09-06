@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "diary_app.API", "diary_app.API.csproj", "{ACF171D7-2154-4449-9666-C3478162183C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "diary.app.DAL", "..\praca_magisterska.DAL\diary.app.DAL.csproj", "{02BB6B01-7F54-477B-AED1-20F197D9C1F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACF171D7-2154-4449-9666-C3478162183C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF171D7-2154-4449-9666-C3478162183C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF171D7-2154-4449-9666-C3478162183C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF171D7-2154-4449-9666-C3478162183C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02BB6B01-7F54-477B-AED1-20F197D9C1F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02BB6B01-7F54-477B-AED1-20F197D9C1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02BB6B01-7F54-477B-AED1-20F197D9C1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02BB6B01-7F54-477B-AED1-20F197D9C1F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C283A5B5-581F-44AA-8F45-7FED570DEAD4}
+	EndGlobalSection
+EndGlobal

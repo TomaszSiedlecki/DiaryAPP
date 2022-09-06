@@ -1,0 +1,15 @@
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\praca_magisterska.DAL.deps.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\praca_magisterska.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\ref\praca_magisterska.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\praca_magisterska.DAL.pdb
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.csprojAssemblyReference.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.AssemblyInfoInputs.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.AssemblyInfo.cs
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\ref\praca_magisterska.DAL.dll
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.pdb
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\praca_magisterska.DAL.runtimeconfig.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\bin\Debug\net5.0\praca_magisterska.DAL.runtimeconfig.dev.json
+C:\Users\Tomek\source\repos\praca_magisterska.DAL\obj\Debug\net5.0\praca_magisterska.DAL.genruntimeconfig.cache
