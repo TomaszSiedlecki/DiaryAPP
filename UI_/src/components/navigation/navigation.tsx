@@ -4,7 +4,7 @@ const Navigation = () => {
     const user =  localStorage.getItem('user-data');
     return(
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-white">
+            <nav className="navbar navbar-expand-lg navbar-light navbar-diary">
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ">
                         <li className="nav-item ">

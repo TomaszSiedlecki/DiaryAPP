@@ -87,39 +87,40 @@ const Grades = () =>{
 
     return(
         <>
-        <div className="row container  mt-2">
-            <div className="col-3">
-            <div className="input-group">
-                <select onChange={(e)=>setSubject(e.target.value)} className="filter-select" id="inputGroupSelect04">
-                    <option selected>All</option>
-                    {subjects.map(i =>(
-                    <option value={i}>{i}</option>
-
-                ))}
-                </select>
-            </div>
+        <div className="row container mt-2">
+            <div className="col-6 m-3">
+                <div className="input-group ">
+                    <select onChange={(e)=>setSubject(e.target.value)} className="filter-select" id="inputGroupSelect04">
+                        <option selected>All</option>
+                        {subjects.map(i =>(
+                        <option value={i}>{i}</option>
+                    ))}
+                    </select>
+                </div>
             </div>
         </div>
-        <table className="mt-2 table">
-                <thead className="thead-light">
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Subject</th>
-                    <th scope="col">Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {grades?.map((i,index) =>(
+        <div className={"m-4"}>
+            <table className="mt-2 table">
+                    <thead className="thead-light">
                         <tr>
-                        <th scope="row">{index}</th>
-                        <td>{i.key}</td>
-                        <td>{i.value}</td>
+                        <th scope="col">#</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Grade</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        {grades?.map((i,index) =>(
+                            <tr>
+                            <th scope="row">{index}</th>
+                            <td>{i.key}</td>
+                            <td>{i.value}</td>
+                            </tr>
 
-                    ))}
-                    
-                </tbody>
-            </table>
+                        ))}
+                        
+                    </tbody>
+                </table>
+        </div>
         </>
     );
 };
