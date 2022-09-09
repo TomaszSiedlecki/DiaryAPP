@@ -105,7 +105,7 @@ namespace praca_magisterska_API.Services
                 
                 var stringUser = arguments.StudentID.ToString();
                 var user = UserHandler.ConnectedIds.Where(c => c.StudentID == stringUser).FirstOrDefault();
-                if(user)
+                if(user != null)
                 {
                     _hubContext.Clients.Client(user.ConnectionID).ReceiveMessage(message);
                 }
@@ -149,7 +149,7 @@ namespace praca_magisterska_API.Services
 
                 var stringUser = arguments.StudentID.ToString();
                 var user = UserHandler.ConnectedIds.Where(c => c.StudentID == stringUser).FirstOrDefault();
-                if(user)
+                if(user != null)
                 {
                     _hubContext.Clients.Client(user.ConnectionID).ReceiveMessage(message);
                 }
